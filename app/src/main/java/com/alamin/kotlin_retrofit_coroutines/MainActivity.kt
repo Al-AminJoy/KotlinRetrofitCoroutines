@@ -23,8 +23,24 @@ class MainActivity : AppCompatActivity() {
             .create(APIInterface::class.java)
         //getAllAlbums();
         //getAlbumByQueryParameter();
-        getAlbumByPathParameter(3);
+        //getAlbumByPathParameter(3);
+        uploadAlbum();
 
+    }
+
+    private fun uploadAlbum() {
+        val  album: AlbumsItem = AlbumsItem(0,"My Title",3);
+        val postResponse : LiveData<Response<AlbumsItem>> = liveData {
+            val  response = apiInterface!!.uploadAlbum(album)
+            emit(response)
+        }
+
+        postResponse.observe(this, Observer {
+            if (it.isSuccessful) {
+                val response = it.body();
+                Log.d(TAG, "uploadAlbum: "+response.toString())
+            }
+        })
     }
 
     private fun getAlbumByPathParameter(id: Int) {
